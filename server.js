@@ -1,5 +1,6 @@
 const express = require('express');
 const path = require('path');
+const fs = require('fs');
 const uuid = require('./helpers/uuid');
 const api = require('./routes/index.js');
 const db = require('./db/db');
@@ -14,7 +15,6 @@ app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 app.use('/api', api);
 
-// app.use(express.static('public'));
 
 // GET Route for homepage
 app.get('/', (req, res) => {
@@ -26,7 +26,17 @@ app.get('/notes', (req, res) => {
     // res.status(200).json(db);
 });
 
-//POST Route for sending notes on request
+// API Routes
+app.get('/api/notes', (req, res) => {
+    fs.readFile('db/db.json', 'utf8', (err, data) => {
+        if (err) {
+            console.error("Error reading notes:", err);
+            return res.sendStatus(500);
+        }
+        res.json(JSON.parse(data));
+    });
+});
+
 app.post('/api/notes', (req, res) => {
     console.info(`${req.method} request received to post note`);
 
@@ -46,27 +56,8 @@ app.post('/api/notes', (req, res) => {
         status: 'success',
         body: newNote,
       };
-  
-      console.log(response);
-      res.status(201).json(response);
-    } else {
-      res.status(500).json('Error in posting review');
     }
-});
-
-// API Routes
-app.get('/api/notes', (req, res) => {
-    fs.readFile('db/db.json', 'utf8', (err, data) => {
-        if (err) {
-            console.error("Error reading notes:", err);
-            return res.sendStatus(500);
-        }
-        res.json(JSON.parse(data));
-    });
-});
-
-app.post('/api/notes', (req, res) => {
-    const newNote = req.body;
+    newNote = req.body;
 
     fs.readFile('db/db.json', 'utf8', (err, data) => {
         if (err) {
