@@ -9,7 +9,7 @@ Keeping Notes is an application ran with express.js on the backend to create and
 
 ## Deployment URL
 https://keeping-notes-11e76e4b0c85.herokuapp.com/
-
+https://github.com/RVanVlietII/KeepingNotes
 
 ## Credits
 
